@@ -1,13 +1,7 @@
-FROM python:3.9.5-slim AS builder
-
-COPY ./ /app
-
-WORKDIR /app
-
-RUN pip install -r requirements.txt && \
-    apt-get update && apt-get install -y build-essential
-
-
-FROM nginx:alpine
-
-COPY --from=builder /app/build/html /usr/share/nginx/html
+FROM python:3.9.5-slim
+COPY app.py /src/app.py
+RUN pip install flask
+WORKDIR /src
+ENV FLASK=app.py
+EXPOSE 5000
+CMD ["flask","run","-h","0.0.0.0"]
